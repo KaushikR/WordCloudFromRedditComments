@@ -1,12 +1,8 @@
-# Analysis of scraped file
+# Builds word cloud from submission
 
 import time
 import praw
 import datetime
-import pickle
-import requests
-import json
-import pprint
 from wordcloud import WordCloud, STOPWORDS
 
 WIDTH = 1280
@@ -57,17 +53,15 @@ def writeFreq(text, outFile, words):
         outFile.write(item[0] + ',' + str(item[1]) + '\n')
 
 
-def fetchAndProcessComments():
+def fetchAndProcessComments(subid):
     """
-
-    Function to process comments from a submission and write necessary stuff onto a .csv file
-    
+    Function to process comments from a submission
     """
     
     r = praw.Reddit('/r/IAmA scraping by /u/kashre001')    
     
     try: 
-        new_submission = r.get_submission(submission_id = '3mq1wl')
+        new_submission = r.get_submission(submission_id = subid)
         new_submission.replace_more_comments(limit=None, threshold=0)
         all_flat_comments = praw.helpers.flatten_tree(new_submission.comments)
     
@@ -82,6 +76,7 @@ def fetchAndProcessComments():
 
 def main():
 
+    subid = '3mq1wl'
     freqFile = open('RandiaFreq.csv','w',encoding='utf-8')
     submissionId = '3mq1wl'
     imgFile  = 'AMAcloud2'    
@@ -95,5 +90,5 @@ def main():
     writeFreq(text, freqFile, words_to_be_excluded)
     freqFile.close()
     
-# Call Main 3mq1wl
+# Call Main 
 main()
